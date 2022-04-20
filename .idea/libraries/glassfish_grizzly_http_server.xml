@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="glassfish.grizzly.http.server" type="repository">
+    <properties maven-id="org.glassfish.grizzly:grizzly-http-server:2.3.23" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/grizzly/grizzly-http-server/2.3.23/grizzly-http-server-2.3.23.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/grizzly/grizzly-http/2.3.23/grizzly-http-2.3.23.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/grizzly/grizzly-framework/2.3.23/grizzly-framework-2.3.23.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

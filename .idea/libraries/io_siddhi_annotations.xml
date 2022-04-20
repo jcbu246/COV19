@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="io.siddhi.annotations" type="repository">
+    <properties maven-id="io.siddhi:siddhi-annotations:5.1.11" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/siddhi/siddhi-annotations/5.1.11/siddhi-annotations-5.1.11.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/atteo/classindex/classindex/3.8/classindex-3.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

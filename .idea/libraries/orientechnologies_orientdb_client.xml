@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="orientechnologies.orientdb.client" type="repository">
+    <properties maven-id="com.orientechnologies:orientdb-client:3.0.0" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/orientechnologies/orientdb-client/3.0.0/orientdb-client-3.0.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/orientechnologies/orientdb-core/3.0.0/orientdb-core-3.0.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/java/dev/jna/jna/4.5.0/jna-4.5.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/java/dev/jna/jna-platform/4.5.0/jna-platform-4.5.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.4.2/concurrentlinkedhashmap-lru-1.4.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

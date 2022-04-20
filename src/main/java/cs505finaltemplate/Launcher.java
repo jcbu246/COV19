@@ -1,8 +1,10 @@
 package cs505finaltemplate;
 
+import com.mchange.v2.util.ResourceClosedException;
 import cs505finaltemplate.CEP.CEPEngine;
 import cs505finaltemplate.Topics.TopicConnector;
 import cs505finaltemplate.graphDB.GraphDBEngine;
+import cs505finaltemplate.httpcontrollers.API;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -27,43 +29,43 @@ public class Launcher {
     public static void main(String[] args) throws IOException {
 
 
-        //startig DB/CEP init
+        //starting DB/CEP init
 
-        //READ CLASS COMMENTS BEFORE USING
+        //Make sure DB is running in Docker
         //graphDBEngine = new GraphDBEngine();
 
-        cepEngine = new CEPEngine();
+//        cepEngine = new CEPEngine();
+//
+//        System.out.println("Starting CEP...");
+//
+//        inputStreamName = "testInStream";
+//        String inputStreamAttributesString = "zip_code string";
+//
+//        String outputStreamName = "testOutStream";
+//        String outputStreamAttributesString = "zip_code string, count long";
+//
+//        //This query must be modified.  Currently, it provides the last zip_code and total count
+//        //You want counts per zip_code, to say another way "grouped by" zip_code
+//        String queryString = " " +
+//                "from testInStream#window.timeBatch(5 sec) " +
+//                "select zip_code, count() as count " +
+//                "insert into testOutStream; ";
+//
+//        cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
+//
+//        System.out.println("CEP Started...");
+//        //end DB/CEP Init
 
-        System.out.println("Starting CEP...");
-
-        inputStreamName = "testInStream";
-        String inputStreamAttributesString = "zip_code string";
-
-        String outputStreamName = "testOutStream";
-        String outputStreamAttributesString = "zip_code string, count long";
-
-        //This query must be modified.  Currently, it provides the last zip_code and total count
-        //You want counts per zip_code, to say another way "grouped by" zip_code
-        String queryString = " " +
-                "from testInStream#window.timeBatch(5 sec) " +
-                "select zip_code, count() as count " +
-                "insert into testOutStream; ";
-
-        cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
-
-        System.out.println("CEP Started...");
-        //end DB/CEP Init
-
-        //start message collector
-        Map<String,String> message_config = new HashMap<>();
-        message_config.put("hostname",""); //Fill config for your team in
-        message_config.put("username","");
-        message_config.put("password","");
-        message_config.put("virtualhost","");
-
-        topicConnector = new TopicConnector(message_config);
-        topicConnector.connect();
-        //end message collector
+//        //start message collector
+//        Map<String,String> message_config = new HashMap<>();
+//        message_config.put("hostname",""); //Fill config for your team in
+//        message_config.put("username","");
+//        message_config.put("password","");
+//        message_config.put("virtualhost","");
+//
+//        topicConnector = new TopicConnector(message_config);
+//        topicConnector.connect();
+//        //end message collector
 
         //Embedded HTTP initialization
         startServer();
@@ -80,13 +82,12 @@ public class Launcher {
     private static void startServer() throws IOException {
 
         final ResourceConfig rc = new ResourceConfig()
-        .packages("cs505pubsubcep.httpcontrollers");
+        .packages("cs505finaltemplate.httpcontrollers");
         //.register(AuthenticationFilter.class);
 
         System.out.println("Starting Web Server...");
         URI BASE_URI = UriBuilder.fromUri("http://0.0.0.0/").port(WEB_PORT).build();
         HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(BASE_URI, rc);
-
         try {
             httpServer.start();
             System.out.println("Web Server Started...");

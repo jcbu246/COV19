@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import cs505finaltemplate.Launcher;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.PrintWriter;
@@ -27,7 +24,7 @@ public class API {
         gson = new Gson();
     }
 
-
+    //region MANAGEMENT FUNCTION ENDPOINTS
     @GET
     @Path("/getteam")
     @Produces(MediaType.APPLICATION_JSON)
@@ -62,6 +59,66 @@ public class API {
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
 
+    @GET
+    @Path("/reset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response reset() {
+        String responseString = "{}";
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+    //endregion
+
+    //region REAL TIME REPORTING ENDPOINTS
+    @GET
+    @Path("/zipalertlist")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response zipAlertList() {
+        String responseString = "{}";
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/alertlist")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response alertList() {
+        String responseString = "{}";
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/getconfirmedcontacts/{mrn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getConfirmedContacts(@PathParam("mrn") String mrn) {
+        String responseString = "{}";
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/getpossiblecontacts/{mrn}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPossibleContacts(@PathParam("mrn") String mrn) {
+        String responseString = "{}";
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+    //endregion
+
+    //region OPERATIONAL REPORTING FUNCTIONS ENDPOINTS
+    @GET
+    @Path("/getpatientstatus/{hospital_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPatientStatus(@PathParam("hospital_id") String hospitalID) {
+        String responseString = "{}";
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+
+    @GET
+    @Path("/getpatientstatus")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPatientStatus() {
+        String responseString = "{}";
+        return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+    }
+    //endregion
     @GET
     @Path("/getlastcep")
     @Produces(MediaType.APPLICATION_JSON)

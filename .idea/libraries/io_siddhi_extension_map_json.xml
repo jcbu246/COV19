@@ -1,0 +1,42 @@
+<component name="libraryTable">
+  <library name="io.siddhi.extension.map.json" type="repository">
+    <properties maven-id="io.siddhi.extension.map.json:siddhi-map-json:5.0.6" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/io/siddhi/extension/map/json/siddhi-map-json/5.0.6/siddhi-map-json-5.0.6.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/siddhi/siddhi-core/5.1.2/siddhi-core-5.1.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/siddhi/siddhi-query-compiler/5.1.2/siddhi-query-compiler-5.1.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/mvel/mvel2/2.4.4.Final/mvel2-2.4.4.Final.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/log4j/log4j/1.2.17/log4j-1.2.17.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-simple/1.7.26/slf4j-simple-1.7.26.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/wso2/orbit/com/lmax/disruptor/3.4.2.wso2v1/disruptor-3.4.2.wso2v1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/guava/guava/23.0/guava-23.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/code/findbugs/jsr305/1.3.9/jsr305-1.3.9.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/errorprone/error_prone_annotations/2.0.18/error_prone_annotations-2.0.18.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/j2objc/j2objc-annotations/1.1/j2objc-annotations-1.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/codehaus/mojo/animal-sniffer-annotations/1.14/animal-sniffer-annotations-1.14.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/quartz-scheduler/wso2/quartz/2.1.1.wso2v1/quartz-2.1.1.wso2v1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/quartz-scheduler/quartz/2.1.1/quartz-2.1.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/c3p0/c3p0/0.9.1.1/c3p0-0.9.1.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/dropwizard/metrics/metrics-core/3.1.0/metrics-core-3.1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/eclipse/osgi/org.eclipse.osgi.services/3.3.100.v20130513-1956/org.eclipse.osgi.services-3.3.100.v20130513-1956.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/osgi/org.osgi.core/6.0.0/org.osgi.core-6.0.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/siddhi/siddhi-query-api/5.1.2/siddhi-query-api-5.1.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/io/siddhi/siddhi-annotations/5.1.2/siddhi-annotations-5.1.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/atteo/classindex/classindex/3.8/classindex-3.8.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/apache/log4j/wso2/log4j/1.2.17.wso2v1/log4j-1.2.17.wso2v1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/jayway/jsonpath/json-path/2.2.0/json-path-2.2.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/slf4j/slf4j-api/1.7.16/slf4j-api-1.7.16.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.9.10.1/jackson-databind-2.9.10.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.9.10/jackson-annotations-2.9.10.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.9.10/jackson-core-2.9.10.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.0/gson-2.8.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/wso2/orbit/org/apache/tapestry/tapestry-json/5.4.1.wso2v1/tapestry-json-5.4.1.wso2v1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/minidev/json-smart/2.2/json-smart-2.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/minidev/accessors-smart/1.1/accessors-smart-1.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/ow2/asm/asm/5.0.3/asm-5.0.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

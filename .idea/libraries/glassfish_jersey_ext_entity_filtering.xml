@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="glassfish.jersey.ext.entity.filtering" type="repository">
+    <properties maven-id="org.glassfish.jersey.ext:jersey-entity-filtering:2.22.2" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/ext/jersey-entity-filtering/2.22.2/jersey-entity-filtering-2.22.2.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/javax/ws/rs/javax.ws.rs-api/2.0.1/javax.ws.rs-api-2.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

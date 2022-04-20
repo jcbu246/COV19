@@ -1,6 +1,7 @@
 package cs505finaltemplate.graphDB;
 
 import com.orientechnologies.orient.core.db.ODatabaseSession;
+import com.orientechnologies.orient.core.db.ODatabaseType;
 import com.orientechnologies.orient.core.db.OrientDB;
 import com.orientechnologies.orient.core.db.OrientDBConfig;
 import com.orientechnologies.orient.core.metadata.schema.OClass;
@@ -23,8 +24,9 @@ public class GraphDBEngine {
         //see class notes for how to use the dashboard
 
 
-        OrientDB orient = new OrientDB("remote:localhost", OrientDBConfig.defaultConfig());
-        ODatabaseSession db = orient.open("test", "root", "rootpwd");
+        //OrientDB orient = new OrientDB("remote:localhost", OrientDBConfig.defaultConfig());
+        OrientDB orient = new OrientDB("remote:jsov225.cs.uky.edu", OrientDBConfig.defaultConfig());
+        ODatabaseSession db = orient.open("finalproject", "root", "rootpwd");
 
         clearDB(db);
 
@@ -90,11 +92,14 @@ public class GraphDBEngine {
         rs.close(); //REMEMBER TO ALWAYS CLOSE THE RESULT SET!!!
     }
 
+    /**
+     * Clears all data from the graph database and makes a clean slate.
+     * @param db the current database object to clear
+     */
     private void clearDB(ODatabaseSession db) {
 
         String query = "DELETE VERTEX FROM patient";
         db.command(query);
-
     }
 
 }
