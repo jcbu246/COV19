@@ -99,6 +99,26 @@ public class API {
     @Produces(MediaType.APPLICATION_JSON)
     public Response alertList() {
         String responseString = "{}";
+        try {
+            Map<String, Integer> responseMap = new HashMap<>();
+            //Check if state is on alert
+            if (alertZipcodeList.length >= 5) {
+                // Alert = 1, State is on alert
+                responseMap.put("state_status", 0);
+            }
+            else {
+                // Alert = 0, State is not on alert
+                responseMap.put("state_status", 0);
+            }
+            responseString = gson.toJson(responseMap);
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
 

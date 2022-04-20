@@ -40,7 +40,6 @@ public class TopicConnector {
             factory.setUsername(config.get("username"));
             factory.setPassword(config.get("password"));
             factory.setVirtualHost(config.get("virtualhost"));
-            factory.setRequestedHeartbeat(30);
 
             //create a connection, many channels can be created from a single connection
             Connection connection = factory.newConnection();
@@ -84,7 +83,7 @@ public class TopicConnector {
                     zip_entry.put("zip_code",String.valueOf(testingData.patient_zipcode));
                     String testInput = gson.toJson(zip_entry);
                     //uncomment for debug
-                    //System.out.println("testInput: " + testInput);
+                    System.out.println("testInput: " + testInput);
 
                     //insert into CEP
                     Launcher.cepEngine.input("inputStream",testInput);

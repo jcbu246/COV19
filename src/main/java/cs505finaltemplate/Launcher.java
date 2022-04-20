@@ -54,10 +54,6 @@ public class Launcher {
         cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
 
         System.out.println("CEP Started...");
-
-        cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
-
-        System.out.println("CEP Started...");
         //end DB/CEP Init
 
         //start message collector
