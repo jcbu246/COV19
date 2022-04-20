@@ -24,8 +24,8 @@ public class GraphDBEngine {
         //see class notes for how to use the dashboard
 
 
-        //OrientDB orient = new OrientDB("remote:localhost", OrientDBConfig.defaultConfig());
-        OrientDB orient = new OrientDB("remote:jsov225.cs.uky.edu", OrientDBConfig.defaultConfig());
+        OrientDB orient = new OrientDB("remote:localhost", OrientDBConfig.defaultConfig());
+        //OrientDB orient = new OrientDB("remote:jsov225.cs.uky.edu:2424", OrientDBConfig.defaultConfig());
         ODatabaseSession db = orient.open("finalproject", "root", "rootpwd");
 
         clearDB(db);
@@ -97,7 +97,6 @@ public class GraphDBEngine {
      * @param db the current database object to clear
      */
     private void clearDB(ODatabaseSession db) {
-
         String query = "DELETE VERTEX FROM patient";
         db.command(query);
     }

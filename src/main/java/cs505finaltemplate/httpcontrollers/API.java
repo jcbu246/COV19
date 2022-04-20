@@ -31,11 +31,11 @@ public class API {
     public Response getteam() {
         String responseString = "{}";
         try {
-            System.out.println("WHAT");
+            System.out.println("Team Member API Hit!");
             Map<String,String> responseMap = new HashMap<>();
-            responseMap.put("team_name", "templateTeam");
-            responseMap.put("Team_members_sids", "[0]");
-            responseMap.put("app_status_code","0");
+            responseMap.put("team_name", "Jake Overstreet");
+            responseMap.put("Team_members_sids", "[12172151]");
+            responseMap.put("app_status_code","1");
 
             responseString = gson.toJson(responseMap);
 

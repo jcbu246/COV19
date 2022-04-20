@@ -34,38 +34,38 @@ public class Launcher {
         //Make sure DB is running in Docker
         //graphDBEngine = new GraphDBEngine();
 
-//        cepEngine = new CEPEngine();
-//
-//        System.out.println("Starting CEP...");
-//
-//        inputStreamName = "testInStream";
-//        String inputStreamAttributesString = "zip_code string";
-//
-//        String outputStreamName = "testOutStream";
-//        String outputStreamAttributesString = "zip_code string, count long";
-//
-//        //This query must be modified.  Currently, it provides the last zip_code and total count
-//        //You want counts per zip_code, to say another way "grouped by" zip_code
-//        String queryString = " " +
-//                "from testInStream#window.timeBatch(5 sec) " +
-//                "select zip_code, count() as count " +
-//                "insert into testOutStream; ";
-//
-//        cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
-//
-//        System.out.println("CEP Started...");
-//        //end DB/CEP Init
+        cepEngine = new CEPEngine();
 
-//        //start message collector
-//        Map<String,String> message_config = new HashMap<>();
-//        message_config.put("hostname",""); //Fill config for your team in
-//        message_config.put("username","");
-//        message_config.put("password","");
-//        message_config.put("virtualhost","");
-//
-//        topicConnector = new TopicConnector(message_config);
-//        topicConnector.connect();
-//        //end message collector
+        System.out.println("Starting CEP...");
+
+        inputStreamName = "testInStream";
+        String inputStreamAttributesString = "zip_code string";
+
+        String outputStreamName = "testOutStream";
+        String outputStreamAttributesString = "zip_code string, count long";
+
+        //This query must be modified.  Currently, it provides the last zip_code and total count
+        //You want counts per zip_code, to say another way "grouped by" zip_code
+        String queryString = " " +
+                "from testInStream#window.timeBatch(5 sec) " +
+                "select zip_code, count() as count " +
+                "insert into testOutStream; ";
+
+        cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
+
+        System.out.println("CEP Started...");
+        //end DB/CEP Init
+
+        //start message collector
+        Map<String,String> message_config = new HashMap<>();
+        message_config.put("hostname","128.163.202.50");
+        message_config.put("username","student");
+        message_config.put("password","student01");
+        message_config.put("virtualhost","14");
+
+        topicConnector = new TopicConnector(message_config);
+        topicConnector.connect();
+        //end message collector
 
         //Embedded HTTP initialization
         startServer();
