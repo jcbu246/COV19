@@ -25,7 +25,7 @@ public class API {
         gson = new Gson();
     }
 
-    public static int[] alertZipcodeList = null;
+    public static int[] alertZipcodeList = new int[0];
 
     //region MANAGEMENT FUNCTION ENDPOINTS
     @GET
@@ -58,7 +58,10 @@ public class API {
     public Response reset() {
         String responseString = "{}";
         try {
-            GraphDBEngine.resetDB("finalproject");
+            int result = GraphDBEngine.resetDB("finalproject");
+            Map<String,Integer> responseMap = new HashMap<>();
+            responseMap.put("ziplist", result);
+
         }
         catch (Exception ex) {
             StringWriter sw = new StringWriter();

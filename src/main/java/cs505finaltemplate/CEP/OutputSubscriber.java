@@ -49,12 +49,10 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
                 //Check if zip was in previous event
                 if (prevZipAlertEvent.containsKey(zipcode)) {
                     //Check if zip has doubled in size
-//                    if (prevZipAlertEvent.get(zipcode) >= newCount * 2) {
-//                        //Add zip to alert list
-//                        alertZipcodeList.add(zipcode);
-//                    }
-                    //TESTING PURPOSES ONLY
-                    alertZipcodeList.add(zipcode);
+                    if (prevZipAlertEvent.get(zipcode) >= newCount * 2) {
+                        //Add zip to alert list
+                        alertZipcodeList.add(zipcode);
+                    }
 
                     //Replace old count with new count in the list.
                     prevZipAlertEvent.replace(zipcode, newCount);
