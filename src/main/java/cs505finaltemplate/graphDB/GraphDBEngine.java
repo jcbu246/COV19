@@ -23,11 +23,12 @@ public class GraphDBEngine {
         //docker run -d --name orientdb -p 2424:2424 -p 2480:2480 -e ORIENTDB_ROOT_PASSWORD=rootpwd orientdb:3.0.0
 
         //Open connection to database client
-        client = new OrientDB("remote:localhost", OrientDBConfig.defaultConfig());
-        //client = new OrientDB("remote:localhost", "root", "rootpwd", OrientDBConfig.defaultConfig());
+        //client = new OrientDB("remote:localhost", OrientDBConfig.defaultConfig());
+        client = new OrientDB("remote:localhost", "root", "rootpwd", OrientDBConfig.defaultConfig());
 
         // Reset DB and create new one
         int result = resetDB("finalproject");
+        System.out.println(result);
 
         // Get the database session
         ODatabaseSession db = client.open("finalproject", "root", "rootpwd");
