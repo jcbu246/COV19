@@ -80,8 +80,7 @@ public class Launcher {
     private static void startServer() throws IOException {
 
         final ResourceConfig rc = new ResourceConfig()
-        .packages("cs505pubsubcep.httpcontrollers");
-        //.register(AuthenticationFilter.class);
+        .packages("cs505finaltemplate.httpcontrollers");
 
         System.out.println("Starting Web Server...");
         URI BASE_URI = UriBuilder.fromUri("http://0.0.0.0/").port(WEB_PORT).build();

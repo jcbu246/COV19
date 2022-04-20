@@ -34,18 +34,11 @@ public class API {
     public Response getteam() {
         String responseString = "{}";
         try {
-
+            System.out.println("WHAT");
             Map<String,String> responseMap = new HashMap<>();
-            if(Launcher.cepEngine != null) {
-
-                    responseMap.put("team_name", "templateTeam");
-                    responseMap.put("Team_members_sids", "[0]");
-                    responseMap.put("app_status_code","0");
-
-            } else {
-                responseMap.put("success", Boolean.FALSE.toString());
-                responseMap.put("status_desc","CEP Engine is null!");
-            }
+            responseMap.put("team_name", "templateTeam");
+            responseMap.put("Team_members_sids", "[0]");
+            responseMap.put("app_status_code","0");
 
             responseString = gson.toJson(responseMap);
 
