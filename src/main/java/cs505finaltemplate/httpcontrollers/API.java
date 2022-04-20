@@ -2,6 +2,7 @@ package cs505finaltemplate.httpcontrollers;
 
 import com.google.gson.Gson;
 import cs505finaltemplate.Launcher;
+import cs505finaltemplate.graphDB.GraphDBEngine;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -38,10 +39,7 @@ public class API {
             responseMap.put("app_status_code","1");
 
             responseString = gson.toJson(responseMap);
-
-
         } catch (Exception ex) {
-
             StringWriter sw = new StringWriter();
             ex.printStackTrace(new PrintWriter(sw));
             String exceptionAsString = sw.toString();
@@ -57,6 +55,17 @@ public class API {
     @Produces(MediaType.APPLICATION_JSON)
     public Response reset() {
         String responseString = "{}";
+        try {
+            GraphDBEngine.resetDB("finalproject");
+        }
+        catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
     //endregion

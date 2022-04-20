@@ -13,6 +13,8 @@ import com.orientechnologies.orient.core.sql.executor.OResultSet;
 
 public class GraphDBEngine {
 
+    private static OrientDB client = null;
+
 
     //!!! CODE HERE IS FOR EXAMPLE ONLY, YOU MUST CHECK AND MODIFY!!!
     public GraphDBEngine() {
@@ -20,15 +22,17 @@ public class GraphDBEngine {
         //launch a docker container for orientdb, don't expect your data to be saved unless you configure a volume
         //docker run -d --name orientdb -p 2424:2424 -p 2480:2480 -e ORIENTDB_ROOT_PASSWORD=rootpwd orientdb:3.0.0
 
-        //use the orientdb dashboard to create a new database
-        //see class notes for how to use the dashboard
+        //Open connection to database client
+        client = new OrientDB("remote:localhost", OrientDBConfig.defaultConfig());
+        //client = new OrientDB("remote:localhost", "root", "rootpwd", OrientDBConfig.defaultConfig());
 
+        // Reset DB and create new one
+        int result = resetDB("finalproject");
 
-        OrientDB orient = new OrientDB("remote:localhost", OrientDBConfig.defaultConfig());
-        //OrientDB orient = new OrientDB("remote:jsov225.cs.uky.edu:2424", OrientDBConfig.defaultConfig());
-        ODatabaseSession db = orient.open("finalproject", "root", "rootpwd");
+        // Get the database session
+        ODatabaseSession db = client.open("finalproject", "root", "rootpwd");
 
-        clearDB(db);
+        //clearDB(db);
 
         //create classes
         OClass patient = db.getClass("patient");
@@ -66,18 +70,18 @@ public class GraphDBEngine {
         getContacts(db, "mrn_0");
 
         db.close();
-        orient.close();
+        client.close();
 
     }
 
-    private OVertex createPatient(ODatabaseSession db, String patient_mrn) {
+    private static OVertex createPatient(ODatabaseSession db, String patient_mrn) {
         OVertex result = db.newVertex("patient");
         result.setProperty("patient_mrn", patient_mrn);
         result.save();
         return result;
     }
 
-    private void getContacts(ODatabaseSession db, String patient_mrn) {
+    private static void getContacts(ODatabaseSession db, String patient_mrn) {
 
         String query = "TRAVERSE inE(), outE(), inV(), outV() " +
                 "FROM (select from patient where patient_mrn = ?) " +
@@ -96,9 +100,25 @@ public class GraphDBEngine {
      * Clears all data from the graph database and makes a clean slate.
      * @param db the current database object to clear
      */
-    private void clearDB(ODatabaseSession db) {
+    private static void clearDB(ODatabaseSession db) {
         String query = "DELETE VERTEX FROM patient";
         db.command(query);
     }
 
+    /**
+     * Resets the database by dropping the database and creating a new one.
+     * @param name
+     */
+    public static int resetDB(String name) {
+        try {
+            if (client.exists(name)) {
+                client.drop(name);
+            }
+            client.create(name, ODatabaseType.PLOCAL, OrientDBConfig.defaultConfig());
+            return 1;
+        } catch (Exception ex) {
+            System.out.println(ex);
+            return 0;
+        }
+    }
 }

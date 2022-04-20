@@ -32,7 +32,7 @@ public class Launcher {
         //starting DB/CEP init
 
         //Make sure DB is running in Docker
-        //graphDBEngine = new GraphDBEngine();
+        graphDBEngine = new GraphDBEngine();
 
         cepEngine = new CEPEngine();
 
