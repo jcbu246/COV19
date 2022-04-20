@@ -22,7 +22,7 @@ public class Launcher {
     public static String inputStreamName;
     public static CEPEngine cepEngine;
     public static TopicConnector topicConnector;
-    public static final int WEB_PORT = 8082;
+    public static final int WEB_PORT = 9000;
 
     public static String lastCEPOutput = "{}";
 
@@ -38,18 +38,19 @@ public class Launcher {
 
         System.out.println("Starting CEP...");
 
-        inputStreamName = "testInStream";
+        inputStreamName = "inputStream";
         String inputStreamAttributesString = "zip_code string";
 
-        String outputStreamName = "testOutStream";
+        String outputStreamName = "outputStream";
         String outputStreamAttributesString = "zip_code string, count long";
 
         //This query must be modified.  Currently, it provides the last zip_code and total count
         //You want counts per zip_code, to say another way "grouped by" zip_code
         String queryString = " " +
-                "from testInStream#window.timeBatch(5 sec) " +
+                "from inputStream#window.timeBatch(15 sec) " +
                 "select zip_code, count() as count " +
-                "insert into testOutStream; ";
+                "group by zip_code" +
+                "insert into outputStream; ";
 
         cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);
 

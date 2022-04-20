@@ -25,6 +25,8 @@ public class API {
         gson = new Gson();
     }
 
+    public static int[] alertZipcodeList = null;
+
     //region MANAGEMENT FUNCTION ENDPOINTS
     @GET
     @Path("/getteam")
@@ -76,6 +78,19 @@ public class API {
     @Produces(MediaType.APPLICATION_JSON)
     public Response zipAlertList() {
         String responseString = "{}";
+        try {
+            Map<String,int[]> responseMap = new HashMap<>();
+            responseMap.put("ziplist", alertZipcodeList);
+
+            responseString = gson.toJson(responseMap);
+        } catch (Exception ex) {
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            ex.printStackTrace();
+
+            return Response.status(500).entity(exceptionAsString).build();
+        }
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
 

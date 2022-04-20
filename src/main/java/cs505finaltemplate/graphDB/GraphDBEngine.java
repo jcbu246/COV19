@@ -15,8 +15,6 @@ public class GraphDBEngine {
 
     private static OrientDB client = null;
 
-
-    //!!! CODE HERE IS FOR EXAMPLE ONLY, YOU MUST CHECK AND MODIFY!!!
     public GraphDBEngine() {
 
         //launch a docker container for orientdb, don't expect your data to be saved unless you configure a volume
@@ -28,7 +26,6 @@ public class GraphDBEngine {
 
         // Reset DB and create new one
         int result = resetDB("finalproject");
-        System.out.println(result);
 
         // Get the database session
         ODatabaseSession db = client.open("finalproject", "root", "rootpwd");

@@ -40,6 +40,7 @@ public class TopicConnector {
             factory.setUsername(config.get("username"));
             factory.setPassword(config.get("password"));
             factory.setVirtualHost(config.get("virtualhost"));
+            factory.setRequestedHeartbeat(30);
 
             //create a connection, many channels can be created from a single connection
             Connection connection = factory.newConnection();
@@ -86,7 +87,7 @@ public class TopicConnector {
                     //System.out.println("testInput: " + testInput);
 
                     //insert into CEP
-                    Launcher.cepEngine.input("testInStream",testInput);
+                    Launcher.cepEngine.input("inputStream",testInput);
 
                     //do something else with each record
                     /*
