@@ -25,7 +25,8 @@ public class API {
         gson = new Gson();
     }
 
-    public static int[] alertZipcodeList = new int[0];
+    public static int[] alertZipcodeList;
+    public static int numAlertedZipcodes;
 
     //region MANAGEMENT FUNCTION ENDPOINTS
     @GET
@@ -58,7 +59,7 @@ public class API {
     public Response reset() {
         String responseString = "{}";
         try {
-            int result = GraphDBEngine.resetDB("finalproject");
+            int result = GraphDBEngine.reset();
             Map<String,Integer> responseMap = new HashMap<>();
             responseMap.put("ziplist", result);
 
@@ -105,9 +106,9 @@ public class API {
         try {
             Map<String, Integer> responseMap = new HashMap<>();
             //Check if state is on alert
-            if (alertZipcodeList.length >= 5) {
+            if (numAlertedZipcodes >= 5) {
                 // Alert = 1, State is on alert
-                responseMap.put("state_status", 0);
+                responseMap.put("state_status", 1);
             }
             else {
                 // Alert = 0, State is not on alert

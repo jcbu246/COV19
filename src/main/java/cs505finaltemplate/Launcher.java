@@ -47,8 +47,9 @@ public class Launcher {
         //This query must be modified.  Currently, it provides the last zip_code and total count
         //You want counts per zip_code, to say another way "grouped by" zip_code
         String queryString = " " +
-                "from testInStream#window.timeBatch(5 sec) " +
+                "from testInStream#window.timeBatch(15 sec) " +
                 "select zip_code, count() as count " +
+                "group by zip_code " +
                 "insert into testOutStream; ";
 
         cepEngine.createCEP(inputStreamName, outputStreamName, inputStreamAttributesString, outputStreamAttributesString, queryString);

@@ -7,8 +7,11 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import cs505finaltemplate.Launcher;
+import cs505finaltemplate.graphDB.GraphDBEngine;
 import io.siddhi.query.api.expression.condition.In;
+import org.graalvm.compiler.graph.Graph;
 
+import java.awt.*;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +22,10 @@ public class TopicConnector {
 
     private Gson gson;
 
-    final Type typeOfListMap = new TypeToken<List<Map<String,String>>>(){}.getType();
-    final Type typeListTestingData = new TypeToken<List<TestingData>>(){}.getType();
+    final Type typeOfPatientData = new TypeToken<List<PatientData>>(){}.getType();
+    final Type typeOfHospitalData = new TypeToken<List<HospitalData>>(){}.getType();
+    final Type typeOfVaccinationData = new TypeToken<List<VaccinationData>>(){}.getType();
 
-    //private String EXCHANGE_NAME = "patient_data";
     Map<String,String> config;
 
     public TopicConnector(Map<String,String> config) {
@@ -68,44 +71,51 @@ public class TopicConnector {
             channel.queueBind(queueName, topicName, "#");
 
 
-            System.out.println(" [*] Paitent List Waiting for messages. To exit press CTRL+C");
+            System.out.println(" [*] Patient List Waiting for messages. To exit press CTRL+C");
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
                 String message = new String(delivery.getBody(), "UTF-8");
 
-
-                List<TestingData> incomingList = gson.fromJson(message, typeListTestingData);
-                for (TestingData testingData : incomingList) {
-
+                List<PatientData> incomingList = gson.fromJson(message, typeOfPatientData);
+                GraphDBEngine.openConnection();
+                for (PatientData patientData : incomingList) {
                     //Data to send to CEP
                     Map<String,String> zip_entry = new HashMap<>();
-                    zip_entry.put("zip_code",String.valueOf(testingData.patient_zipcode));
+                    zip_entry.put("zip_code",String.valueOf(patientData.patient_zipcode));
                     String testInput = gson.toJson(zip_entry);
                     //uncomment for debug
                     System.out.println("testInput: " + testInput);
 
                     //insert into CEP
-                    Launcher.cepEngine.input("inputStream",testInput);
+                    Launcher.cepEngine.input("testInStream",testInput);
 
-                    //do something else with each record
-                    /*
-                    System.out.println("*Java Class*");
-                    System.out.println("\ttesting_id = " + testingData.testing_id);
-                    System.out.println("\tpatient_name = " + testingData.patient_name);
-                    System.out.println("\tpatient_mrn = " + testingData.patient_mrn);
-                    System.out.println("\tpatient_zipcode = " + testingData.patient_zipcode);
-                    System.out.println("\tpatient_status = " + testingData.patient_status);
-                    System.out.println("\tcontact_list = " + testingData.contact_list);
-                    System.out.println("\tevent_list = " + testingData.event_list);
-                     */
+                    //Send to DB engine for CRUD operations
+                    GraphDBEngine.handlePatientData(patientData);
+
+//                    System.out.println("*Java Class*");
+//                    System.out.println("\ttesting_id = " + testingData.testing_id);
+//                    System.out.println("\tpatient_name = " + testingData.patient_name);
+//                    System.out.println("\tpatient_mrn = " + testingData.patient_mrn);
+//                    System.out.println("\tpatient_zipcode = " + testingData.patient_zipcode);
+//                    System.out.println("\tpatient_status = " + testingData.patient_status);
+//                    System.out.println("\tcontact_list = " + testingData.contact_list);
+//                    System.out.println("\tevent_list = " + testingData.event_list);
+
+//                    testing_id = 10
+//                    patient_name = Kimberly Althouse
+//                    patient_mrn = 45fe41fb-c352-11ec-90ac-0da233908077
+//                    patient_zipcode = 42071
+//                    patient_status = 0
+//                    contact_list = [45fe41fb-c352-11ec-90ac-0da233908077, 45fe41fb-c352-11ec-90ac-0da233908077,
+//                              45fe41fb-c352-11ec-90ac-0da233908077, 45fe41fb-c352-11ec-90ac-0da233908077,
+//                              45fe41fb-c352-11ec-90ac-0da233908077]
+//                    event_list = [45fe41fa-c352-11ec-90ac-0da233908077]
                 }
-
+                GraphDBEngine.closeConnection();
             };
-
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
             });
-
         } catch (Exception ex) {
             System.out.println("patientListChannel Error: " + ex.getMessage());
             ex.printStackTrace();
@@ -132,15 +142,13 @@ public class TopicConnector {
                 String message = new String(delivery.getBody(), "UTF-8");
 
                 //convert string to class
-                List<Map<String,String>> incomingList = gson.fromJson(message, typeOfListMap);
-                for (Map<String,String> hospitalData : incomingList) {
-                    int hospital_id = Integer.parseInt(hospitalData.get("hospital_id"));
-                    String patient_name = hospitalData.get("patient_name");
-                    String patient_mrn = hospitalData.get("patient_mrn");
-                    int patient_status = Integer.parseInt(hospitalData.get("patient_status"));
-                    //do something with each each record.
+                List<HospitalData> incomingList = gson.fromJson(message, typeOfHospitalData);
+                GraphDBEngine.openConnection();
+                for (HospitalData hospitalData : incomingList) {
+                    //Send to DB engine to handle data
+                    GraphDBEngine.handleHospitalData(hospitalData);
                 }
-
+                GraphDBEngine.closeConnection();
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
@@ -172,14 +180,13 @@ public class TopicConnector {
                 String message = new String(delivery.getBody(), "UTF-8");
 
                 //convert string to class
-                List<Map<String,String>> incomingList = gson.fromJson(message, typeOfListMap);
-                for (Map<String,String> vaxData : incomingList) {
-                    int vaccination_id = Integer.parseInt(vaxData.get("vaccination_id"));
-                    String patient_name = vaxData.get("patient_name");
-                    String patient_mrn = vaxData.get("patient_mrn");
-                    //do something with each each record.
+                List<VaccinationData> incomingList = gson.fromJson(message, typeOfVaccinationData);
+                GraphDBEngine.openConnection();
+                for (VaccinationData vaxData : incomingList) {
+                    //Send to DB engine to handle vax data
+                    GraphDBEngine.handleVaccinationData(vaxData);
                 }
-
+                GraphDBEngine.closeConnection();
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {

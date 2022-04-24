@@ -1,11 +1,12 @@
 package cs505finaltemplate.CEP;
 
-import com.google.gson.Gson;
 import cs505finaltemplate.Launcher;
+import cs505finaltemplate.UnitTests.RealTimeReportingTests;
 import cs505finaltemplate.httpcontrollers.API;
 import io.siddhi.core.util.transport.InMemoryBroker;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
     private Map<Integer, Integer> prevZipAlertEvent;
     public OutputSubscriber(String topic, String streamName) {
         this.topic = topic;
+        this.prevZipAlertEvent = new HashMap<>();
     }
 
     @Override
@@ -31,25 +33,20 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
             Launcher.lastCEPOutput = String.valueOf(msg);
 
             //Parse Event String
-            //{"event":{"zip_code":"40143","count":2}}
-            String[] event = String.valueOf(msg).split(":", 1);
-            // "[{"event"", "{"zip_code":"40143","count":2}}""
-            System.out.println(event);
-            String[] values = event[1].split(",");
+            String parsedMessage = String.valueOf(msg).replaceAll("\\[|\\{|}|]|\"event\":", "");
+            parsedMessage = parsedMessage.replaceAll("\"zip_code\":|\"count\":|\"", "");
+            String[] splitMessage = parsedMessage.split(",");
+            //System.out.println(parsedMessage);
 
-            //Build Alert String for each Zipcode
-            for (String v : values) {
-                String[] value = v.split(":");
-                System.out.println(value);
-
-                //Set variables for parsed zipcode and count
-                Integer zipcode = Integer.getInteger(value[0]);
-                Integer newCount = Integer.getInteger(value[1]);
+            //Build Alert String for each zipcode
+            for (int i=0; i < splitMessage.length-1; i+=2){
+                Integer zipcode = Integer.parseInt(splitMessage[i]);
+                Integer newCount = Integer.parseInt(splitMessage[i+1]);
 
                 //Check if zip was in previous event
                 if (prevZipAlertEvent.containsKey(zipcode)) {
                     //Check if zip has doubled in size
-                    if (prevZipAlertEvent.get(zipcode) >= newCount * 2) {
+                    if (prevZipAlertEvent.get(zipcode) * 2 <= newCount) {
                         //Add zip to alert list
                         alertZipcodeList.add(zipcode);
                     }
@@ -62,15 +59,15 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
                     prevZipAlertEvent.put(zipcode, newCount);
                 }
             }
+            //System.out.println(alertZipcodeList.toString());
 
             //Send alert list to API
+            API.numAlertedZipcodes = alertZipcodeList.size();
             API.alertZipcodeList = alertZipcodeList.stream().mapToInt(Integer::intValue).toArray();
 
-
-            //String[] sstr = String.valueOf(msg).split(":");
-            //String[] outval = sstr[2].split("}");
-            //Launcher.accessCount = Long.parseLong(outval[0]);
-
+            //Used for unit testing
+            RealTimeReportingTests.numAlertedZipcodes = alertZipcodeList.size();
+            RealTimeReportingTests.alertZipcodeList = alertZipcodeList.stream().mapToInt(Integer::intValue).toArray();
         } catch(Exception ex) {
             ex.printStackTrace();
         }
