@@ -223,7 +223,6 @@ public class GraphDBEngine {
     }
 
     public static Map<String, Float> getPatientStatus(int hospital_id) {
-        db.activateOnCurrentThread();
         // Get patients that attend hospital
         String query = "select patient_vaccination_status, patient_hospital_status from patient where hospital_id = ?";
         OResultSet rs = db.query(query, hospital_id);
@@ -243,7 +242,6 @@ public class GraphDBEngine {
     }
 
     public static Map<Integer, Map<String,Float>> getAllPatientStatus() {
-        db.activateOnCurrentThread();
         // Get patients that attend hospital
         String query = "select hospital_id, patient_hospital_status, patient_vaccination_status from patient order by hospital_id";
         OResultSet rs = db.query(query);
