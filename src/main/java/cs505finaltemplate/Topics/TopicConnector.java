@@ -8,8 +8,6 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
 import cs505finaltemplate.Launcher;
 import cs505finaltemplate.graphDB.GraphDBEngine;
-import io.siddhi.query.api.expression.condition.In;
-import org.graalvm.compiler.graph.Graph;
 
 import java.awt.*;
 import java.lang.reflect.Type;
@@ -78,30 +76,24 @@ public class TopicConnector {
                 String message = new String(delivery.getBody(), "UTF-8");
 
                 List<PatientData> incomingList = gson.fromJson(message, typeOfPatientData);
-                GraphDBEngine.openConnection();
                 for (PatientData patientData : incomingList) {
-                    //Data to send to CEP
-                    Map<String,String> zip_entry = new HashMap<>();
-                    zip_entry.put("zip_code",String.valueOf(patientData.patient_zipcode));
-                    String testInput = gson.toJson(zip_entry);
-                    //uncomment for debug
-                    System.out.println("testInput: " + testInput);
 
-                    //insert into CEP
-                    Launcher.cepEngine.input("testInStream",testInput);
+                    //Only send positive cases into CEP
+                    if (patientData.patient_status == 1){
+                        //Data to send to CEP
+                        Map<String,String> zip_entry = new HashMap<>();
+                        zip_entry.put("zip_code",String.valueOf(patientData.patient_zipcode));
+                        String testInput = gson.toJson(zip_entry);
 
-                    //Send to DB engine for CRUD operations
+                        //insert into CEP
+                        Launcher.cepEngine.input("testInStream",testInput);
+                    }
+                    //Send to DB engine for processing
+                    GraphDBEngine.openConnection();
                     GraphDBEngine.handlePatientData(patientData);
+                    GraphDBEngine.openConnection();
 
-//                    System.out.println("*Java Class*");
-//                    System.out.println("\ttesting_id = " + testingData.testing_id);
-//                    System.out.println("\tpatient_name = " + testingData.patient_name);
-//                    System.out.println("\tpatient_mrn = " + testingData.patient_mrn);
-//                    System.out.println("\tpatient_zipcode = " + testingData.patient_zipcode);
-//                    System.out.println("\tpatient_status = " + testingData.patient_status);
-//                    System.out.println("\tcontact_list = " + testingData.contact_list);
-//                    System.out.println("\tevent_list = " + testingData.event_list);
-
+//                    System.out.println(patientData.patient_mrn);
 //                    testing_id = 10
 //                    patient_name = Kimberly Althouse
 //                    patient_mrn = 45fe41fb-c352-11ec-90ac-0da233908077
@@ -112,7 +104,6 @@ public class TopicConnector {
 //                              45fe41fb-c352-11ec-90ac-0da233908077]
 //                    event_list = [45fe41fa-c352-11ec-90ac-0da233908077]
                 }
-                GraphDBEngine.closeConnection();
             };
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
             });
@@ -140,15 +131,16 @@ public class TopicConnector {
 
                 //new message
                 String message = new String(delivery.getBody(), "UTF-8");
+                //System.out.println(message);
 
                 //convert string to class
                 List<HospitalData> incomingList = gson.fromJson(message, typeOfHospitalData);
-                GraphDBEngine.openConnection();
                 for (HospitalData hospitalData : incomingList) {
                     //Send to DB engine to handle data
+                    GraphDBEngine.openConnection();
                     GraphDBEngine.handleHospitalData(hospitalData);
+                    GraphDBEngine.closeConnection();
                 }
-                GraphDBEngine.closeConnection();
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
@@ -178,15 +170,14 @@ public class TopicConnector {
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
                 String message = new String(delivery.getBody(), "UTF-8");
+                //System.out.println(message);
 
                 //convert string to class
                 List<VaccinationData> incomingList = gson.fromJson(message, typeOfVaccinationData);
-                GraphDBEngine.openConnection();
                 for (VaccinationData vaxData : incomingList) {
                     //Send to DB engine to handle vax data
                     GraphDBEngine.handleVaccinationData(vaxData);
                 }
-                GraphDBEngine.closeConnection();
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {

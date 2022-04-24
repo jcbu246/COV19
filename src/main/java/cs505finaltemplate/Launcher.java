@@ -1,10 +1,8 @@
 package cs505finaltemplate;
 
-import com.mchange.v2.util.ResourceClosedException;
 import cs505finaltemplate.CEP.CEPEngine;
 import cs505finaltemplate.Topics.TopicConnector;
 import cs505finaltemplate.graphDB.GraphDBEngine;
-import cs505finaltemplate.httpcontrollers.API;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -17,7 +15,6 @@ import java.util.Map;
 
 
 public class Launcher {
-
     public static GraphDBEngine graphDBEngine;
     public static String inputStreamName;
     public static CEPEngine cepEngine;
