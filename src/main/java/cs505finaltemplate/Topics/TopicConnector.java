@@ -74,6 +74,7 @@ public class TopicConnector {
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
                 String message = new String(delivery.getBody(), "UTF-8");
+                System.out.println("Patient Message Received.");
 
                 List<PatientData> incomingList = gson.fromJson(message, typeOfPatientData);
                 GraphDBEngine.openConnection();
@@ -131,7 +132,7 @@ public class TopicConnector {
 
                 //new message
                 String message = new String(delivery.getBody(), "UTF-8");
-                //System.out.println(message);
+                System.out.println("Hospital Message Received.");
 
                 //convert string to class
                 List<HospitalData> incomingList = gson.fromJson(message, typeOfHospitalData);
@@ -170,7 +171,7 @@ public class TopicConnector {
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
                 String message = new String(delivery.getBody(), "UTF-8");
-                //System.out.println(message);
+                System.out.println("Vaccination Message Received.");
 
                 //convert string to class
                 List<VaccinationData> incomingList = gson.fromJson(message, typeOfVaccinationData);
