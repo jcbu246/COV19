@@ -319,12 +319,14 @@ public class GraphDBEngine {
             ventVacPercentage = ventVaxCount.floatValue() / ventCount.floatValue();
 
         //Add results to map
-        results.put("in-patient_count:", inPatientCount.floatValue());
-        results.put("in-patient_vax:", inPatientVaxPercentage);
-        results.put("icu-patient_count:", icuCount.floatValue());
-        results.put("icu-patient_vax:", icuVaxPercentage);
-        results.put("patient_vent_count:", ventCount.floatValue());
-        results.put("patient_vent_vax:", ventVacPercentage);
+        if (inPatientCount > 0 && icuCount > 0 && ventVaxCount > 0) {
+            results.put("in-patient_count:", inPatientCount.floatValue());
+            results.put("in-patient_vax:", inPatientVaxPercentage);
+            results.put("icu-patient_count:", icuCount.floatValue());
+            results.put("icu-patient_vax:", icuVaxPercentage);
+            results.put("patient_vent_count:", ventCount.floatValue());
+            results.put("patient_vent_vax:", ventVacPercentage);
+        }
         return results;
     }
     //endregion
