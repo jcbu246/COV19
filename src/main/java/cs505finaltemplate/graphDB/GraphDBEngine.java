@@ -91,6 +91,7 @@ public class GraphDBEngine {
             //Update event contacts
             updateEvents(patient, vPatient);
         } catch (Exception ex) {
+            ex.printStackTrace();
             System.out.println(ex);
             return false;
         }
@@ -116,6 +117,7 @@ public class GraphDBEngine {
             updateHospitalFacility(hospital, vPatient);
 
         } catch (Exception ex) {
+            ex.printStackTrace();
             System.out.println(ex);
             return false;
         }
@@ -140,6 +142,7 @@ public class GraphDBEngine {
             //update hospital connection
             updateVaccinationFacility(vaccination, vPatient);
         } catch (Exception ex) {
+            ex.printStackTrace();
             System.out.println(ex);
             return false;
         }
@@ -158,119 +161,143 @@ public class GraphDBEngine {
     }
 
     public static Map<String, List<String>> getPotentialContacts(String patient_mrn) {
-        String query1 = "Traverse inE(), outE(), inV(), outV() FROM " +
-                "(select * from patient where patient_mrn = ?) " +
-                "while $depth <= 2";
-        OResultSet rs1 = db.query(query1, patient_mrn);
+        try {
+            String query1 = "Traverse inE(), outE(), inV(), outV() FROM " +
+                    "(select * from patient where patient_mrn = ?) " +
+                    "while $depth <= 2";
+            OResultSet rs1 = db.query(query1, patient_mrn);
 
-        Map<String, List<String>> list = new HashMap<>();
-        String event_id = "";
-        while (rs1.hasNext()) {
-            OResult item1 = rs1.next();
-            if (item1.hasProperty("event_id"))
-                event_id = item1.getProperty("event_id");
-            if (event_id != "") {
-                String query = "TRAVERSE inE(), outE(), inV(), outV() FROM " +
-                        "(select * from event where event_id = ?) " +
-                        "WHILE $depth <= 2";
-                OResultSet rs = db.query(query, event_id);
+            Map<String, List<String>> list = new HashMap<>();
+            String event_id = "";
+            while (rs1.hasNext()) {
+                OResult item1 = rs1.next();
+                if (item1.hasProperty("event_id"))
+                    event_id = item1.getProperty("event_id");
+                if (event_id != "") {
+                    String query = "TRAVERSE inE(), outE(), inV(), outV() FROM " +
+                            "(select * from event where event_id = ?) " +
+                            "WHILE $depth <= 2";
+                    OResultSet rs = db.query(query, event_id);
 
-                String currentEvent = null;
-                List<String> currentMRNs = new ArrayList<>();
-                while (rs.hasNext()) {
-                    OResult item = rs.next();
-                    if (item.hasProperty("event_id")) {
-                        //Check if first event in the result set
-                        String temp = item.getProperty("event_id");
-                        if (currentEvent == null)
-                            currentEvent = temp;
-                        else if (temp.equals(currentEvent))
-                            list.put(currentEvent, currentMRNs);
+                    String currentEvent = null;
+                    List<String> currentMRNs = new ArrayList<>();
+                    while (rs.hasNext()) {
+                        OResult item = rs.next();
+                        if (item.hasProperty("event_id")) {
+                            //Check if first event in the result set
+                            String temp = item.getProperty("event_id");
+                            if (currentEvent == null)
+                                currentEvent = temp;
+                            else if (temp.equals(currentEvent))
+                                list.put(currentEvent, currentMRNs);
+                        }
+                        if (item.hasProperty("patient_mrn")) {
+                            String temp = item.getProperty("patient_mrn");
+                            if (!temp.equals(patient_mrn))
+                                currentMRNs.add(item.getProperty("patient_mrn"));
+                        }
                     }
-                    if (item.hasProperty("patient_mrn")) {
-                        String temp = item.getProperty("patient_mrn");
-                        if (!temp.equals(patient_mrn))
-                            currentMRNs.add(item.getProperty("patient_mrn"));
-                    }
+                    if (currentEvent != null && currentMRNs.size() > 0)
+                        list.put(currentEvent, currentMRNs);
+                    rs.close();
                 }
-                if (currentEvent != null && currentMRNs.size() > 0)
-                    list.put(currentEvent, currentMRNs);
-                rs.close();
             }
+            rs1.close();
+            return list;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println(ex);
+            return new HashMap<>();
         }
-        rs1.close();
-        return list;
     }
 
     public static List<String> getConfirmedContacts(String patient_mrn) {
-        String query = "TRAVERSE inE(), outE(), inV(), outV() " +
-                "FROM (select from patient where patient_mrn = ?) " +
-                "WHILE $depth <= 2";
-        OResultSet rs = db.query(query, patient_mrn);
+        try {
+            String query = "TRAVERSE inE(), outE(), inV(), outV() " +
+                    "FROM (select from patient where patient_mrn = ?) " +
+                    "WHILE $depth <= 2";
+            OResultSet rs = db.query(query, patient_mrn);
 
-        List<String> resultList = new ArrayList<>();
-        while (rs.hasNext()) {
-            OResult item = rs.next();
-            if (item.hasProperty("patient_mrn")) {
-                String temp = item.getProperty("patient_mrn");
-                if (!patient_mrn.equals(temp)) {
-                    resultList.add(temp);
+            List<String> resultList = new ArrayList<>();
+            while (rs.hasNext()) {
+                OResult item = rs.next();
+                if (item.hasProperty("patient_mrn")) {
+                    String temp = item.getProperty("patient_mrn");
+                    if (!patient_mrn.equals(temp)) {
+                        resultList.add(temp);
+                    }
                 }
             }
+            rs.close(); //REMEMBER TO ALWAYS CLOSE THE RESULT SET!!!
+            return resultList;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println(ex);
+            return new ArrayList<>();
         }
-        rs.close(); //REMEMBER TO ALWAYS CLOSE THE RESULT SET!!!
-        return resultList;
     }
 
     public static Map<String, Float> getPatientStatus(int hospital_id) {
-        // Get patients that attend hospital
-        String query = "select patient_vaccination_status, patient_hospital_status from patient where hospital_id = ?";
-        OResultSet rs = db.query(query, hospital_id);
+        try {
+            // Get patients that attend hospital
+            String query = "select patient_vaccination_status, patient_hospital_status from patient where hospital_id = ?";
+            OResultSet rs = db.query(query, hospital_id);
 
-        List<Integer> vaxStatusList = new ArrayList<>();
-        List<Integer> patientStatusList = new ArrayList<>();
-        while (rs.hasNext()) {
-            OResult item = rs.next();
-            if (item.hasProperty("patient_vaccination_status"))
-                vaxStatusList.add(item.getProperty("patient_vaccination_status"));
-            if (item.hasProperty("patient_hospital_status"))
-                patientStatusList.add(item.getProperty("patient_hospital_status"));
+            List<Integer> vaxStatusList = new ArrayList<>();
+            List<Integer> patientStatusList = new ArrayList<>();
+            while (rs.hasNext()) {
+                OResult item = rs.next();
+                if (item.hasProperty("patient_vaccination_status"))
+                    vaxStatusList.add(item.getProperty("patient_vaccination_status"));
+                if (item.hasProperty("patient_hospital_status"))
+                    patientStatusList.add(item.getProperty("patient_hospital_status"));
+            }
+            rs.close();
+
+            return calculateStats(vaxStatusList, patientStatusList);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println(ex);
+            return new HashMap<>();
         }
-        rs.close();
-
-        return calculateStats(vaxStatusList, patientStatusList);
     }
 
     public static Map<Integer, Map<String,Float>> getAllPatientStatus() {
-        // Get patients that attend hospital
-        String query = "select hospital_id, patient_hospital_status, patient_vaccination_status from patient order by hospital_id";
-        OResultSet rs = db.query(query);
+        try {
+            // Get patients that attend hospital
+            String query = "select hospital_id, patient_hospital_status, patient_vaccination_status from patient order by hospital_id";
+            OResultSet rs = db.query(query);
 
-        Map<Integer, Map<String, Float>> result = new HashMap<>();
-        List<Integer> vaxStatusList = new ArrayList<>();
-        List<Integer> patientStatusList = new ArrayList<>();
-        Integer hospital_id = -1;
-        while (rs.hasNext()) {
-            OResult item = rs.next();
-            if (hospital_id == -1) {
-                hospital_id = item.getProperty("hospital_id");
+            Map<Integer, Map<String, Float>> result = new HashMap<>();
+            List<Integer> vaxStatusList = new ArrayList<>();
+            List<Integer> patientStatusList = new ArrayList<>();
+            Integer hospital_id = -1;
+            while (rs.hasNext()) {
+                OResult item = rs.next();
+                if (hospital_id == -1) {
+                    hospital_id = item.getProperty("hospital_id");
+                }
+                else if (hospital_id != item.getProperty("hospital_id")) {
+                    //Build list and add it to map
+                    result.put(hospital_id, calculateStats(vaxStatusList, patientStatusList));
+                    vaxStatusList.clear();
+                    patientStatusList.clear();
+                    hospital_id = item.getProperty("hospital_id");
+                }
+                if (item.hasProperty("patient_vaccination_status"))
+                    vaxStatusList.add(item.getProperty("patient_vaccination_status"));
+                if (item.hasProperty("patient_hospital_status"))
+                    patientStatusList.add(item.getProperty("patient_hospital_status"));
             }
-            else if (hospital_id != item.getProperty("hospital_id")) {
-                //Build list and add it to map
+            rs.close();
+            if (hospital_id != -1)
                 result.put(hospital_id, calculateStats(vaxStatusList, patientStatusList));
-                vaxStatusList.clear();
-                patientStatusList.clear();
-                hospital_id = item.getProperty("hospital_id");
-            }
-            if (item.hasProperty("patient_vaccination_status"))
-                vaxStatusList.add(item.getProperty("patient_vaccination_status"));
-            if (item.hasProperty("patient_hospital_status"))
-                patientStatusList.add(item.getProperty("patient_hospital_status"));
+            return result;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println(ex);
+            return new HashMap<>();
         }
-        rs.close();
-        if (hospital_id != -1)
-            result.put(hospital_id, calculateStats(vaxStatusList, patientStatusList));
-        return result;
     }
     //endregion
 
@@ -319,7 +346,7 @@ public class GraphDBEngine {
             ventVacPercentage = ventVaxCount.floatValue() / ventCount.floatValue();
 
         //Add results to map
-        if (inPatientCount > 0 && icuCount > 0 && ventVaxCount > 0) {
+        if (inPatientCount > 0 || icuCount > 0 || ventVaxCount > 0) {
             results.put("in-patient_count:", inPatientCount.floatValue());
             results.put("in-patient_vax:", inPatientVaxPercentage);
             results.put("icu-patient_count:", icuCount.floatValue());
