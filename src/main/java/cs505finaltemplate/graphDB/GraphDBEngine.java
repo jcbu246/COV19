@@ -294,8 +294,7 @@ public class GraphDBEngine {
                     patientStatusList.add(item.getProperty("patient_hospital_status"));
             }
             rs.close();
-            if (hospital_id != -1)
-                result.put(hospital_id, calculateStats(vaxStatusList, patientStatusList));
+            result.put(hospital_id, calculateStats(vaxStatusList, patientStatusList));
             return result;
         } catch (Exception ex) {
             ex.printStackTrace();
