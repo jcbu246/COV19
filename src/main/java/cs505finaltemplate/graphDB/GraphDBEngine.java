@@ -20,6 +20,8 @@ public class GraphDBEngine {
 
     private static OrientDB client = null;
     private static ODatabaseSession db = null;
+    private static int openCount = 0;
+    private static int closeCount = 0;
 
     //region Constructor
     public GraphDBEngine() {
@@ -57,6 +59,7 @@ public class GraphDBEngine {
     public static void openConnection(){
         openClient();
         openDB("finalproject", "root" , "rootpwd");
+        System.out.println("Open Count: " + openCount++);
     }
 
     /**
@@ -65,6 +68,7 @@ public class GraphDBEngine {
     public static void closeConnection() {
         closeDB();
         closeClient();
+        System.out.println("Closed Count: " + closeCount++);
     }
 
     /**
