@@ -268,7 +268,8 @@ public class GraphDBEngine {
                 patientStatusList.add(item.getProperty("patient_hospital_status"));
         }
         rs.close();
-        result.put(hospital_id, calculateStats(vaxStatusList, patientStatusList));
+        if (hospital_id != -1)
+            result.put(hospital_id, calculateStats(vaxStatusList, patientStatusList));
         return result;
     }
     //endregion
