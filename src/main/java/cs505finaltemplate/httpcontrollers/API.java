@@ -62,8 +62,9 @@ public class API {
         try {
             int result = GraphDBEngine.reset();
             Map<String,Integer> responseMap = new HashMap<>();
-            responseMap.put("ziplist", result);
+            responseMap.put("reset_status_code", result);
 
+            responseString = gson.toJson(responseMap);
         }
         catch (Exception ex) {
             StringWriter sw = new StringWriter();
@@ -115,6 +116,7 @@ public class API {
                 // Alert = 0, State is not on alert
                 responseMap.put("state_status", 0);
             }
+
             responseString = gson.toJson(responseMap);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
@@ -134,10 +136,9 @@ public class API {
         String responseString = "{}";
         try {
             Map<String, List<String>> responseMap = new HashMap<>();
-            GraphDBEngine.openConnection();
             List<String> result = GraphDBEngine.getConfirmedContacts(mrn);
-            GraphDBEngine.closeConnection();
             responseMap.put("contactlist", result);
+
             responseString = gson.toJson(responseMap);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
@@ -157,10 +158,9 @@ public class API {
         String responseString = "{}";
         try {
             Map<String, Map<String,List<String>>> responseMap = new HashMap<>();
-            GraphDBEngine.openConnection();
             Map<String, List<String>> result = GraphDBEngine.getPotentialContacts(mrn);
-            GraphDBEngine.closeConnection();
             responseMap.put("contactlist", result);
+
             responseString = gson.toJson(responseMap);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
@@ -181,9 +181,8 @@ public class API {
     public Response getPatientStatus(@PathParam("hospital_id") int hospitalID) {
         String responseString = "{}";
         try {
-            GraphDBEngine.openConnection();
             Map<String, Float> responseMap = GraphDBEngine.getPatientStatus(hospitalID);
-            GraphDBEngine.closeConnection();
+
             responseString = gson.toJson(responseMap);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
@@ -202,9 +201,7 @@ public class API {
     public Response getPatientStatus() {
         String responseString = "{}";
         try {
-            GraphDBEngine.openConnection();
             Map<Integer,Map<String, Float>> responseMap = GraphDBEngine.getAllPatientStatus();
-            GraphDBEngine.closeConnection();
             responseString = gson.toJson(responseMap);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();

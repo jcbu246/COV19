@@ -48,20 +48,16 @@ public class DatabaseTests {
         Gson gson = new Gson();
         List<PatientData> incomingList = gson.fromJson(data, typeOfPatientData);
 
-        GraphDBEngine.openConnection();
         if (incomingList.size() > 0 ) {
             for (PatientData p : incomingList) {
                 Assertions.assertTrue(GraphDBEngine.handlePatientData(p));
             }
         }
-        GraphDBEngine.closeConnection();
     }
 
     @Test
     public void testGetPotentialContacts() {
-        GraphDBEngine.openConnection();
         Map<String, List<String>> result = GraphDBEngine.getPotentialContacts("001");
-        GraphDBEngine.closeConnection();
 
         Assertions.assertEquals("{100=[002], 300=[003, 002]}",result.toString());
 
@@ -70,9 +66,7 @@ public class DatabaseTests {
 
     @Test
     public void testGetConfirmedContacts() {
-        GraphDBEngine.openConnection();
         List<String> result = GraphDBEngine.getConfirmedContacts("001");
-        GraphDBEngine.closeConnection();
 
         Assertions.assertEquals(result.toString(), "[004, 003, 002]");
     }
@@ -91,14 +85,12 @@ public class DatabaseTests {
         Gson gson = new Gson();
         List<HospitalData> incomingList = gson.fromJson(data, typeOfHospitalData);
 
-        GraphDBEngine.openConnection();
         if (incomingList.size() > 0 ) {
             for (HospitalData p : incomingList) {
 
                 Assertions.assertTrue(GraphDBEngine.handleHospitalData(p));
             }
         }
-        GraphDBEngine.closeConnection();
     }
 
     @Test
@@ -113,20 +105,16 @@ public class DatabaseTests {
         Gson gson = new Gson();
         List<VaccinationData> incomingList = gson.fromJson(data, typeOfVaccinationData);
 
-        GraphDBEngine.openConnection();
         if (incomingList.size() > 0 ) {
             for (VaccinationData p : incomingList) {
                 Assertions.assertTrue(GraphDBEngine.handleVaccinationData(p));
             }
         }
-        GraphDBEngine.closeConnection();
     }
 
     @Test
     public void testGetPatientStatusWithID() {
-        GraphDBEngine.openConnection();
         Map<String, Float> results =  GraphDBEngine.getPatientStatus(200);
-        GraphDBEngine.closeConnection();
 
         Assertions.assertEquals("{patient_vent_count:=1.0, patient_vent_vax:=1.0, " +
                 "in-patient_vax:=0.0, in-patient_count:=0.0, icu-patient_vax:=0.0, " +
@@ -135,9 +123,7 @@ public class DatabaseTests {
 
     @Test
     public void testGetPatientStatusAll() {
-        GraphDBEngine.openConnection();
         Map<Integer, Map<String, Float>> results =  GraphDBEngine.getAllPatientStatus();
-        GraphDBEngine.closeConnection();
 
         Assertions.assertEquals("{200={patient_vent_count:=1.0, patient_vent_vax:=1.0, " +
                 "in-patient_vax:=0.0, in-patient_count:=0.0, icu-patient_vax:=0.0, " +

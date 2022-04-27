@@ -77,7 +77,6 @@ public class TopicConnector {
                 System.out.println("Patient Message Received.");
 
                 List<PatientData> incomingList = gson.fromJson(message, typeOfPatientData);
-                GraphDBEngine.openConnection();
                 for (PatientData patientData : incomingList) {
 
                     //Only send positive cases into CEP
@@ -104,7 +103,6 @@ public class TopicConnector {
 //                              45fe41fb-c352-11ec-90ac-0da233908077]
 //                    event_list = [45fe41fa-c352-11ec-90ac-0da233908077]
                 }
-                GraphDBEngine.closeConnection();
             };
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
             });
@@ -136,12 +134,10 @@ public class TopicConnector {
 
                 //convert string to class
                 List<HospitalData> incomingList = gson.fromJson(message, typeOfHospitalData);
-                GraphDBEngine.openConnection();
                 for (HospitalData hospitalData : incomingList) {
                     //Send to DB engine to handle data
                     GraphDBEngine.handleHospitalData(hospitalData);
                 }
-                GraphDBEngine.closeConnection();
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
@@ -175,12 +171,10 @@ public class TopicConnector {
 
                 //convert string to class
                 List<VaccinationData> incomingList = gson.fromJson(message, typeOfVaccinationData);
-                GraphDBEngine.openConnection();
                 for (VaccinationData vaxData : incomingList) {
                     //Send to DB engine to handle vax data
                     GraphDBEngine.handleVaccinationData(vaxData);
                 }
-                GraphDBEngine.closeConnection();
             };
 
             channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {
