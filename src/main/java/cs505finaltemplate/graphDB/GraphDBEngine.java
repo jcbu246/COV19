@@ -275,10 +275,10 @@ public class GraphDBEngine {
             Map<Integer, Map<String, Float>> result = new HashMap<>();
             List<Integer> vaxStatusList = new ArrayList<>();
             List<Integer> patientStatusList = new ArrayList<>();
-            Integer hospital_id = -1;
+            Integer hospital_id = 0;
             while (rs.hasNext()) {
                 OResult item = rs.next();
-                if (hospital_id == -1) {
+                if (hospital_id == 0) {
                     hospital_id = item.getProperty("hospital_id");
                 }
                 else if (hospital_id != item.getProperty("hospital_id")) {
@@ -349,14 +349,12 @@ public class GraphDBEngine {
             ventVacPercentage = ventVaxCount.floatValue() / ventCount.floatValue();
 
         //Add results to map
-        if (inPatientCount > 0 || icuCount > 0 || ventVaxCount > 0) {
-            results.put("in-patient_count:", inPatientCount.floatValue());
-            results.put("in-patient_vax:", inPatientVaxPercentage);
-            results.put("icu-patient_count:", icuCount.floatValue());
-            results.put("icu-patient_vax:", icuVaxPercentage);
-            results.put("patient_vent_count:", ventCount.floatValue());
-            results.put("patient_vent_vax:", ventVacPercentage);
-        }
+        results.put("in-patient_count:", inPatientCount.floatValue());
+        results.put("in-patient_vax:", inPatientVaxPercentage);
+        results.put("icu-patient_count:", icuCount.floatValue());
+        results.put("icu-patient_vax:", icuVaxPercentage);
+        results.put("patient_vent_count:", ventCount.floatValue());
+        results.put("patient_vent_vax:", ventVacPercentage);
         return results;
     }
     //endregion
