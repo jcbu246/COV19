@@ -15,7 +15,6 @@ import java.util.Map;
 
 
 public class Launcher {
-
     public static GraphDBEngine graphDBEngine;
     public static String inputStreamName;
     public static CEPEngine cepEngine;
