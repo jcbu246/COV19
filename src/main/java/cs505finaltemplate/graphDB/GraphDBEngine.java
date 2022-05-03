@@ -11,6 +11,7 @@ import com.orientechnologies.orient.core.record.OVertex;
 import com.orientechnologies.orient.core.sql.executor.OResult;
 import com.orientechnologies.orient.core.sql.executor.OResultSet;
 import cs505finaltemplate.Topics.HospitalData;
+import cs505finaltemplate.Topics.HospitalStatusData;
 import cs505finaltemplate.Topics.PatientData;
 import cs505finaltemplate.Topics.VaccinationData;
 
@@ -243,7 +244,7 @@ public class GraphDBEngine {
         }
     }
 
-    public static Map<String, Float> getPatientStatus(int hospital_id) {
+    public static HospitalStatusData getPatientStatus(int hospital_id) {
         try {
             OrientDB client = new OrientDB("remote:localhost", "root", "rootpwd", OrientDBConfig.defaultConfig());
             ODatabaseSession db = client.open(database_name, username, password, OrientDBConfig.defaultConfig());
@@ -271,11 +272,11 @@ public class GraphDBEngine {
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println(ex);
-            return new HashMap<>();
+            return new HospitalStatusData();
         }
     }
 
-    public static Map<Integer, Map<String,Float>> getAllPatientStatus() {
+    public static HospitalStatusData getAllPatientStatus() {
         try {
             OrientDB client = new OrientDB("remote:localhost", "root", "rootpwd", OrientDBConfig.defaultConfig());
             ODatabaseSession db = client.open(database_name, username, password, OrientDBConfig.defaultConfig());
@@ -284,49 +285,32 @@ public class GraphDBEngine {
             String query = "select hospital_id, patient_hospital_status, patient_vaccination_status from patient where hospital_id is not null order by hospital_id";
             OResultSet rs = db.query(query);
 
-            Map<Integer, Map<String, Float>> result = new HashMap<>();
             List<Integer> vaxStatusList = new ArrayList<>();
             List<Integer> patientStatusList = new ArrayList<>();
-            Integer hospital_id = -1;
             while (rs.hasNext()) {
                 OResult item = rs.next();
-                if (hospital_id == -1 && item.hasProperty("hospital_id")) {
-                    hospital_id = item.getProperty("hospital_id");
-                }
-                else if (hospital_id != item.getProperty("hospital_id")) {
-                    //Build list and add it to map
-                    result.put(hospital_id, calculateStats(vaxStatusList, patientStatusList));
-                    vaxStatusList.clear();
-                    patientStatusList.clear();
-                    hospital_id = item.getProperty("hospital_id");
-                }
                 if (item.hasProperty("patient_vaccination_status"))
                     vaxStatusList.add(item.getProperty("patient_vaccination_status"));
                 if (item.hasProperty("patient_hospital_status"))
                     patientStatusList.add(item.getProperty("patient_hospital_status"));
             }
             rs.close();
-            result.put(hospital_id, calculateStats(vaxStatusList, patientStatusList));
+            HospitalStatusData result = calculateStats(vaxStatusList, patientStatusList);
 
             db.close();
             client.close();
-
-            if (hospital_id == -1) {
-                return new HashMap<>();
-            }
             return result;
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println(ex);
-            return new HashMap<>();
+            return new HospitalStatusData();
         }
     }
     //endregion
 
     //region Private Methods
     //region Helper Methods
-    private static Map<String, Float> calculateStats(List<Integer> vaxStatusList, List<Integer> patientStatusList) {
-        Map<String, Float> results = new HashMap<>();
+    private static HospitalStatusData calculateStats(List<Integer> vaxStatusList, List<Integer> patientStatusList) {
         //Calculate output values
         Integer inPatientCount = 0;
         Integer inPatientVaxCount = 0;
@@ -367,14 +351,15 @@ public class GraphDBEngine {
         if (ventCount != 0)
             ventVacPercentage = ventVaxCount.floatValue() / ventCount.floatValue();
 
-        //Add results to map
-        results.put("in-patient_count", inPatientCount.floatValue());
-        results.put("in-patient_vax", inPatientVaxPercentage);
-        results.put("icu-patient_count", icuCount.floatValue());
-        results.put("icu-patient_vax", icuVaxPercentage);
-        results.put("patient_vent_count", ventCount.floatValue());
-        results.put("patient_vent_vax", ventVacPercentage);
-        return results;
+        //Add results to object
+        HospitalStatusData data = new HospitalStatusData();
+        data.in_patient_count = inPatientCount;
+        data.in_patient_vax = inPatientVaxPercentage;
+        data.icu_patient_count = icuCount;
+        data.icu_patient_vax = icuVaxPercentage;
+        data.patient_vent_count = ventCount;
+        data.patient_vent_vax = ventVacPercentage;
+        return data;
     }
     //endregion
     //region Database Management Methods

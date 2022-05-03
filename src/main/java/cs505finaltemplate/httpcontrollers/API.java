@@ -1,7 +1,9 @@
 package cs505finaltemplate.httpcontrollers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import cs505finaltemplate.Launcher;
+import cs505finaltemplate.Topics.HospitalStatusData;
 import cs505finaltemplate.graphDB.GraphDBEngine;
 
 import javax.inject.Inject;
@@ -181,9 +183,9 @@ public class API {
     public Response getPatientStatus(@PathParam("hospital_id") int hospitalID) {
         String responseString = "{}";
         try {
-            Map<String, Float> responseMap = GraphDBEngine.getPatientStatus(hospitalID);
-
-            responseString = gson.toJson(responseMap);
+            HospitalStatusData dataObj = GraphDBEngine.getPatientStatus(hospitalID);
+            responseString = gson.toJson(dataObj);
+            System.out.println(responseString);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
             ex.printStackTrace(new PrintWriter(sw));
@@ -201,8 +203,9 @@ public class API {
     public Response getPatientStatus() {
         String responseString = "{}";
         try {
-            Map<Integer,Map<String, Float>> responseMap = GraphDBEngine.getAllPatientStatus();
-            responseString = gson.toJson(responseMap);
+            HospitalStatusData dataObj = GraphDBEngine.getAllPatientStatus();
+            responseString = gson.toJson(dataObj);
+            System.out.println(responseString);
         } catch (Exception ex) {
             StringWriter sw = new StringWriter();
             ex.printStackTrace(new PrintWriter(sw));
