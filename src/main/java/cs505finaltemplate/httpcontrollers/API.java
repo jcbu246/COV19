@@ -7,7 +7,11 @@ import cs505finaltemplate.Topics.HospitalStatusData;
 import cs505finaltemplate.graphDB.GraphDBEngine;
 
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.PrintWriter;
@@ -40,8 +44,8 @@ public class API {
         try {
             System.out.println("Team Member API Hit!");
             Map<String,String> responseMap = new HashMap<>();
-            responseMap.put("team_name", "Jake Overstreet");
-            responseMap.put("Team_members_sids", "[12172151]");
+            responseMap.put("team_name", "Incognito Mode");
+            responseMap.put("Team_members_sids", "[912653262, 912228415]");
             responseMap.put("app_status_code","1");
 
             responseString = gson.toJson(responseMap);
