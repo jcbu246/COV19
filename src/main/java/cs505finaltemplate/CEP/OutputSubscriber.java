@@ -64,9 +64,7 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
             API.numAlertedZipcodes = alertZipcodeList.size();
             API.alertZipcodeList = alertZipcodeList.stream().mapToInt(Integer::intValue).toArray();
 
-            //Used for unit testing
-            RealTimeReportingTests.numAlertedZipcodes = alertZipcodeList.size();
-            RealTimeReportingTests.alertZipcodeList = alertZipcodeList.stream().mapToInt(Integer::intValue).toArray();
+           
         } catch(Exception ex) {
             ex.printStackTrace();
         }
