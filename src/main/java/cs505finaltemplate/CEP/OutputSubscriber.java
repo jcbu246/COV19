@@ -1,7 +1,6 @@
 package cs505finaltemplate.CEP;
 
 import cs505finaltemplate.Launcher;
-import cs505finaltemplate.UnitTests.RealTimeReportingTests;
 import cs505finaltemplate.httpcontrollers.API;
 import io.siddhi.core.util.transport.InMemoryBroker;
 
