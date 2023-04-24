@@ -19,7 +19,8 @@ public class Launcher {
     public static String inputStreamName;
     public static CEPEngine cepEngine;
     public static TopicConnector topicConnector;
-    public static final int WEB_PORT = 9000;
+    public static final int WEB_PORT = 9099;
+    public static final String API_SERVICE_KEY = "912653262";
 
     public static String lastCEPOutput = "{}";
 
@@ -56,9 +57,10 @@ public class Launcher {
 
         //start message collector
         Map<String,String> message_config = new HashMap<>();
-        message_config.put("hostname","128.163.202.50");
-        message_config.put("username","student");
-        message_config.put("password","student01");
+        message_config.put("hostname","vbu231.cs.uky.edu");
+        message_config.put("port","9099");
+        message_config.put("username","team_14");
+        message_config.put("password","myPassCS505");
         message_config.put("virtualhost","14");
 
         topicConnector = new TopicConnector(message_config);
